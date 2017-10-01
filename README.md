@@ -62,3 +62,65 @@
     List1.AddItem CStr(rd)
   Next i
 ```
+
+## 4.问题发现与反思
+经历重重思考终于完成了这个程序，我们迫不及待运行它了。以起始号1，终止号50，产生数6，最小间隔2为例，我们将程序运行三次：</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/不等概率1.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/不等概率2.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/不等概率3.png)</br>
+程序运行看上去非常的好，满足了起始号、终止号、产生数和最小间隔的要求。但是仔细一看，我们就会发现40号及以后的学号出现的频率是异常的，即使运行多次也会发现他们频繁出现。此时我们思考刚才的算法，它在本质上就是不等概率的。仍然以起始号1，终止号50，产生数6，最小间隔2为例，第一个数的范围是[1,40]，如果随机数为20，那么下一个数的范围变成了[22,42]，左端向后移动19，而右端受最小间隔制约只能移动2。基于上述算法的程序，后半部分的几率远高于前半部分。所以，我们的程序并没有满足学号抽号器的要求，接下来需要重新设计算法。
+
+## 5.重新设计
+从前到后生成随机数的方法看上去并不可行，那么我们不妨试试数组。</br>
+在本算法中，我们使用数组的下标表示数字，元素表示该数字的状态。我们不妨设定：0表示该数字没有产生过，1表示该数字被产生，2表示该数字因为最小间隔不满足要求或不在起始终止区域内被禁止生成。同时，我们可以创建一个count变量来统计数组中0的个数，防止程序无法结束循环：
+```vb
+    Dim a(1 To 32767) As Integer '0表示未产生，1表示已经产生过，2表示该数因最小间隔不符要求或不在区域内被禁止生成
+    Dim i, j, rd, count As Integer 'i表示正在产生随机数的序号，rd储存生成的随机数，count表示可以使用的数（即数组a中0的个数）
+```
+由于我们只需要考虑起始号到终止号范围内的数，因此我们要将小于起始号或大于终止号的数据置为2:
+```vb
+    For i = 1 To qs - 1 '将小于起始号的数据区域锁定
+        a(i) = 2
+    Next i
+    For i = zz + 1 To 32767 '将大于终止号的数据区域锁定
+        a(i) = 2
+    Next i
+```
+随后，我们开始生成随机数。如果生成的随机数没产生过，那么将其置为1，并且将count减去1；同时要看其周围没生成过的数字是否满足最小间隔，如果不满足，将其置为2，并将count减去1。当count为0而生成序号加1之后小于等于n，则表明为完成任务时已经没有可以生成的数字了，那么此时生成过程被重置。基于以上考虑，我们可以作如下处理：
+```vb
+    i = 1: j = 0: rd = 0: count = zz - qs + 1
+    Do While i <= n '生成n个随机数
+        Randomize
+        rd = Int(Rnd() * (zz - qs + 1) + qs)
+        If a(rd) = 0 Then 'rd未产生过
+            a(rd) = 1: i = i + 1: count = count - 1: If i > n Then Exit Do
+            For j = 1 To jg - 1
+                If rd + j <= zz Then '按照最小间隔锁定右边的数据区域
+                    If a(rd + j) = 0 Then '防止重复锁定导致计数错误
+                        a(rd + j) = 2: count = count - 1
+                    End If
+                End If
+                If rd - j >= qs Then
+                    If a(rd - j) = 0 Then
+                        a(rd - j) = 2: count = count - 1
+                    End If
+                End If
+                If count <= 0 Then '未完成任务时无可用的数字可以生成，重置生成过程
+                    For i = qs To zz
+                        a(i) = 0
+                    Next i
+                    i = 1: count = zz - qs + 1: j = 0
+                    Exit For
+                End If
+            Next j
+        End If
+    Loop
+```
+循环结束则表明随机数已经产生完毕，那么我们就可以根据数组a对产生的随机数进行输出：
+```vb
+    For i = qs To zz
+        If a(i) = 1 Then
+            List1.AddItem CStr(i)
+        End If
+    Next i
+```
