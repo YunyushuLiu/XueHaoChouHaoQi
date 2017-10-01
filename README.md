@@ -124,3 +124,19 @@
         End If
     Next i
 ```
+算法终于重新设计完毕，我们又迫不及待运行它了，这次它真的没让我们失望：</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/等概率1.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/等概率2.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/等概率3.png)</br>
+
+## 6.细节处理——Randomize
+在学习VB的过程中，我们在考试中已经可以非常熟练地使用Rnd()函数了。但在作业和考试中，我们可能很难看到Randomize的身影。而对Randomize的思考，源于第二种算法在运行时总是得到相同的结果。我和我的同伴为学号抽号器编写了不同的程序，但我们惊奇地发现虽然是两个独立运行的程序，运行结果却是完全相同。经历了无数次内心的挣扎，我们才想到Randomize。最终它给了我们满意的答案，学号抽号器才真正编写完成。以下是未使用Randomize的随机数生成程序：</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/无randomize1.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/无randomize2.png)</br>
+我们可以发现独立运行的程序会得到相同的答案，这明显不是我们想看到的。而加上Randomize之后，情况有了明显改善：</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/randomize1.png)</br>
+![](https://github.com/YunyushuLiu/XueHaoChouHaoQi/blob/master/xhchq-image/randomize2.png)</br>
+由此可见，Randomize对于一个随机数产生程序来说是十分重要的。
+
+## 7.写在最后的话
+纸上的代码是我们的梦想，运行的代码大概就是现实吧。只有真正着手去实践，我们才能得到最真实、最满意的答案。
