@@ -45,7 +45,7 @@
     Msgbox("请正确输入产生数！")
     Exit Sub
   End If
-  If qs - zz < (n - 1) * jg Then
+  If zz - qs < (n - 1) * jg Then
     Msgbox("条件矛盾，无法产生！")
     Exit Sub
   End If
